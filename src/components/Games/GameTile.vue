@@ -1,10 +1,11 @@
 <template>
-  <router-link class="game-tile" :to="{ path: '/gameQueue' }" style="text-decoration: none; color: inherit;">
+<!--  :to="{ path: '/gameQueue' }-->
+  <div class="game-tile" style="text-decoration: none; color: inherit;">
     <img src="@/assets/images/card-game-tile.png" class="game-tile-image"/>
     <div class="bottom-game-tile">
       {{ GameName }}
     </div>
-  </router-link>
+  </div>
 </template>
 
 <script lang="ts">
@@ -29,7 +30,7 @@ export default {
   height: 125px;
   width: 40%;
 
-  background-color: var(--color-game-tint);
+  background-color: var(--color-hub-tint);
   border-radius: 10px;
   border: 1px solid black;
   margin: 10px;

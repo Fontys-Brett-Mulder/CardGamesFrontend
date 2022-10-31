@@ -1,3 +1,6 @@
+*{
+    color: var(--color-text);
+}
 h1{
     padding: 10px;
 }

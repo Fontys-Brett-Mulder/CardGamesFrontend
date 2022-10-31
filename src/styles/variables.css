@@ -1,8 +1,9 @@
 :root {
-    --color-text: #064420;
+    --color-text: #00313F;
     --color-game-background: #54BAB9;
     --color-game-tint: #9ED2C6;
-    --color-hub-background: #E9DAC1;
-    --color-hub-tint: #F7ECDE;
+    --color-hub-background: #D5F1FC;
+    --color-hub-tint: #88D6FA;
+    --color-white: #ffffff;
 }
 
