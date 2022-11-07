@@ -34,7 +34,6 @@ export default {
 
     const addUserToSession = () => {
       SessionManager.addItem("playerName", playerName.value)
-      SessionManager.addItem("playerType", "guest")
     }
 
     return { addUserToSession, playerName}

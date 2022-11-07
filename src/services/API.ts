@@ -1,10 +1,16 @@
 import axios, {AxiosInstance} from "axios";
 
-const API: AxiosInstance = axios.create({
-    baseURL: "https://localhost:7167/api/",
+export const GamesAPI: AxiosInstance = axios.create({
+    baseURL: "https://localhost:7000/api/",
     headers: {
         "Content-type": "application/json",
     },
 });
 
-export default API;
+export const SessionAPI: AxiosInstance = axios.create({
+    baseURL: "https://localhost:7001/api/",
+    headers: {
+        "Content-type": "application/json",
+    },
+});
+

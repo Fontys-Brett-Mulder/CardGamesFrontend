@@ -9,7 +9,7 @@
         <h3> {{ game.difficulty }} </h3>
         <h3 v-if="checkIfMinMaxPlayersIsSet(game)">Players: {{game.minPlayers}} - {{game.maxPlayers}}</h3>
       </div>
-      <router-link :to="{ path: '/game/' + game.id }" style="text-decoration: none; color: inherit;" id="game-popup-button" class="default-button">
+      <router-link @click="createSession" :to="{ path: '/game/' + game.id }" style="text-decoration: none; color: inherit;" id="game-popup-button" class="default-button">
         Start Spel
       </router-link>
     </div>
@@ -32,6 +32,9 @@ export default {
   methods: {
     close() {
       this.$emit('closeModal', 'fefw');
+    },
+    createSession(){
+      this.$emit('createSession', 'fefw');
     },
     checkIfMinMaxPlayersIsSet(game: GameModel){
       if (game.minPlayers == null || game.maxPlayers == null){

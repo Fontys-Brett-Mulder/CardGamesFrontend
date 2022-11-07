@@ -35,7 +35,7 @@ export default {
      */
     const getGameData = () => {
       console.log("Hello");
-      axios.get('https://localhost:7167/api/Games/getSpecificgame/' + this.currentGame.id)
+      axios.get('https://localhost:7000/api/Games/getSpecificgame/' + this.currentGame.id)
           .then((resp) => {
                 this.currentGame = resp.data;
                 console.log(resp.data);

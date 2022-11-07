@@ -19,7 +19,7 @@
       Deel mee aan bestaand spel
     </router-link>
 
-    <GamePopup @closeModal="closeModalHandler" v-if="showModal === true" :game="selectedGame" tabindex="0"/>
+    <GamePopup @createSession="createSession" @closeModal="closeModalHandler" v-if="showModal === true" :game="selectedGame" tabindex="0"/>
 
   </div>
 </template>
@@ -30,14 +30,19 @@ import GameTile from "@/components/Games/GameTile.vue";
 import axios from "axios";
 import {GameModel} from "../models/Game";
 import GamePopup from "@/components/Popups/GamePopup.vue";
+import {GuidGenerator} from "../classes/GuidGenerator";
+import {SessionModel} from "../models/Session";
+import {PlayerModel} from "../models/Player";
+
 
 export default {
   data() {
     return {
       games: [] as Array<GameModel>,
-      player: "" as string,
+      player: {} as PlayerModel,
       showModal: false as boolean,
-      selectedGame: {} as GameModel
+      selectedGame: {} as GameModel,
+      sessionToAdd: new SessionModel() as SessionModel,
     }
   },
   components: {
@@ -51,7 +56,6 @@ export default {
      */
     saveGameToLocalstorage: function (game: GameModel) {
       sessionStorage.setItem("currentGameId", game.id.toString());
-      this.createNewGamePin();
     },
     /**
      * Created a new game pin
@@ -59,6 +63,7 @@ export default {
     createNewGamePin: function () {
       let randomNumber = Math.floor(100000 + Math.random() * 900000);
       sessionStorage.setItem("gamePin", randomNumber.toString());
+      return randomNumber;
     },
     /**
      * Show the model for viewing more info about the selected game
@@ -66,29 +71,43 @@ export default {
      */
     showModalHandler: function (game: GameModel) {
       this.selectedGame = game;
+      this.sessionToAdd.gameId = game.id;
       if (!this.showModal) {
         this.showModal = true;
       }
       console.log(this.selectedGame)
     },
+    /**
+     * Close Modal
+     */
     closeModalHandler: function () {
       this.showModal = false;
       this.selectedGame = {};
     },
+    /**
+     * Create new Session
+     */
+    createSession: function (){
+      this.sessionToAdd.gamePin = this.createNewGamePin();
+      axios.post("https://localhost:7001/api/Session", this.sessionToAdd).then(() => {
+        console.log("Posted")
+      })
+
+    }
   },
   mounted() {
     /**
      * Defining properties, classes
      */
     const sessionManager = new SessionStorageManager();
-    this.player = sessionManager.getItem("playerName");
+    const guidGenerator = new GuidGenerator();
 
     /**
      * Get all the games and assign to this.games
      */
     const getGamesData = () => {
       console.log("Hello");
-      axios.get('https://localhost:7099/api/Games/getAllGames')
+      axios.get('https://localhost:7000/api/Games/getAllGames')
           .then((resp) => {
                 this.games = resp.data;
               }
@@ -96,9 +115,29 @@ export default {
     }
 
     /**
+     * Fill player data
+     */
+    const fillPlayerData = () => {
+      this.player.name = sessionManager.getItem("playerName");
+      this.player.id = guidGenerator.createGuid();
+      this.player.isHost = true;
+      this.player.sessionModelId = guidGenerator.createGuid();
+    }
+
+    const fillSessionData = () => {
+      this.sessionToAdd.id = guidGenerator.createGuid();
+      this.sessionToAdd.started = false;
+      this.sessionToAdd.players = [this.player];
+    }
+
+
+    /**
      * Call all functions
      */
+    fillPlayerData();
+    fillSessionData();
     getGamesData();
+
   },
 }
 </script>
