@@ -2,10 +2,10 @@
   <div id="join-game" class="page">
     <h1>Deel mee aan spel</h1>
     <h2>Game pin:</h2>
-    <input v-model="gamepinRef" class="default-input" placeholder="12345A">
-    <router-link v-on:click="addCurrentGameToStorage" :to="{ path: '/gamequeue' }" style="text-decoration: none; color: inherit;" class="default-button">
+    <input v-model="gamePinRef" class="default-input" placeholder="12345A">
+    <div style="text-decoration: none; color: inherit;" class="default-button" v-on:click="addCurrentGameToStorage(gamePinRef)">
       Deel mee
-    </router-link>
+    </div>
 
   </div>
 </template>
@@ -13,27 +13,41 @@
 <script lang="ts">
 import {onMounted, ref} from "vue";
 import {SessionStorageManager} from "../classes/SessionStorage/SessionStorageManager";
+import axios from "axios";
+import {GameModel} from "../models/Game";
+import {PlayerModel} from "../models/Player";
+import {SessionModel} from "../models/Session";
+import {GuidGenerator} from "../classes/GuidGenerator";
 
 export default {
+  data() {
+    return {
+      player: {} as PlayerModel,
+      gamePinRef: ref(null)
+    }
+  },
   components: {
 
   },
-
-  setup() {
+  methods: {
+    addCurrentGameToStorage(gamePin: any) {
+      axios.post("https://localhost:7001/api/Player/" + gamePin, this.player).then(() => {
+        console.log("Posted")
+      })
+    }
+  },
+  mounted() {
     const sessionManager = new SessionStorageManager();
-    const gamepinRef = ref("");
-    onMounted(async () => {
-      console.log("This is on mounted")
-    });
+    const guidGenerator = new GuidGenerator();
 
-    const addCurrentGameToStorage = () => {
-      sessionManager.addItem("currentGame", gamepinRef.value);
+    const fillPlayerData = () => {
+      this.player.id = guidGenerator.createGuid();
+      this.player.isHost = false;
+      this.player.name = sessionStorage.getItem("playerName");
+    }
 
-    }
-    return {
-      gamepinRef,
-      addCurrentGameToStorage
-    }
+
+    fillPlayerData()
   }
 }
 </script>

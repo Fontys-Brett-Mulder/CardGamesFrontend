@@ -52,10 +52,10 @@ export default {
   methods: {
     /**
      * Saves the selected game to the localstorage
-     * @param game
+     * @param id
      */
-    saveGameToLocalstorage: function (game: GameModel) {
-      sessionStorage.setItem("currentGameId", game.id.toString());
+    saveGameToLocalstorage: function (id: string) {
+      sessionStorage.setItem("currentGameId", id.toString());
     },
     /**
      * Created a new game pin
@@ -89,6 +89,8 @@ export default {
      */
     createSession: function (){
       this.sessionToAdd.gamePin = this.createNewGamePin();
+      this.saveGameToLocalstorage(this.sessionToAdd.gameId);
+      sessionStorage.setItem("sessionId", this.sessionToAdd.id );
       axios.post("https://localhost:7001/api/Session", this.sessionToAdd).then(() => {
         console.log("Posted")
       })

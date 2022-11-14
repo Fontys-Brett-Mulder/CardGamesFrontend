@@ -15,7 +15,7 @@ export default {
   data() {
     return {
       gamePin: "" as string,
-      currentGame: GameModel,
+      currentGame: {} as GameModel,
     }
   },
   methods: {
@@ -38,6 +38,7 @@ export default {
       axios.get('https://localhost:7000/api/Games/getSpecificgame/' + this.currentGame.id)
           .then((resp) => {
                 this.currentGame = resp.data;
+                console.log(this.currentGame);
                 console.log(resp.data);
               }
           )
