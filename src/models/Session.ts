@@ -1,4 +1,4 @@
-import {Player, PlayerModel} from "./Player";
+import {PlayerModel} from "./Player";
 
 export class SessionModel {
     id: string;

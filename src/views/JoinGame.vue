@@ -11,13 +11,12 @@
 </template>
 
 <script lang="ts">
-import {onMounted, ref} from "vue";
+import {ref} from "vue";
 import {SessionStorageManager} from "../classes/SessionStorage/SessionStorageManager";
 import axios from "axios";
-import {GameModel} from "../models/Game";
 import {PlayerModel} from "../models/Player";
-import {SessionModel} from "../models/Session";
 import {GuidGenerator} from "../classes/GuidGenerator";
+import router from "../plugins/router";
 
 export default {
   data() {
@@ -31,8 +30,11 @@ export default {
   },
   methods: {
     addCurrentGameToStorage(gamePin: any) {
+
       axios.post("https://localhost:7001/api/Player/" + gamePin, this.player).then(() => {
-        console.log("Posted")
+        sessionStorage.setItem("gamePin", gamePin)
+        sessionStorage.setItem("isHost", "false")
+        router.push("/gamequeue")
       })
     }
   },

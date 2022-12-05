@@ -92,6 +92,7 @@ export default {
       this.saveGameToLocalstorage(this.sessionToAdd.gameId);
       sessionStorage.setItem("sessionId", this.sessionToAdd.id );
       axios.post("https://localhost:7001/api/Session", this.sessionToAdd).then(() => {
+        sessionStorage.setItem("isHost", "true")
         console.log("Posted")
       })
 
@@ -108,7 +109,6 @@ export default {
      * Get all the games and assign to this.games
      */
     const getGamesData = () => {
-      console.log("Hello");
       axios.get('https://localhost:7000/api/Games/getAllGames')
           .then((resp) => {
                 this.games = resp.data;
